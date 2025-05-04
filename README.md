@@ -213,3 +213,141 @@ fun SumTwoNumbers() {
 
 ---
 
+
+
+# 🎓 جزوه آموزشی: لیست پویا با LazyColumn در Jetpack Compose
+
+![image](https://github.com/user-attachments/assets/77b6262a-10a0-477d-920e-6ee2ef3b53d5)
+
+
+## 📘 مقدمه
+
+در Jetpack Compose برای نمایش لیست‌های پویا و قابل تغییر، از `LazyColumn` همراه با `mutableStateListOf` استفاده می‌کنیم.
+این روش به ما اجازه می‌دهد در زمان اجرا آیتم‌ها را اضافه یا حذف کنیم و فوراً تغییرات را در UI ببینیم.
+
+---
+
+
+## ✅ نمایش لیست پویا با `mutableStateListOf`
+
+```kotlin
+@Composable
+fun DynamicListExample() {
+    val items = remember { mutableStateListOf<String>() }
+    var text by remember { mutableStateOf("") }
+
+    Column(modifier = Modifier.padding(16.dp)) {
+        TextField(
+            value = text,
+            onValueChange = { text = it },
+            label = { Text("یک متن وارد کن") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Button(
+            onClick = {
+                items.add(text)
+                text = ""
+            }
+        ) {
+            Text("افزودن به لیست")
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        LazyColumn {
+            items(items) { item ->
+                Text(
+                    text = item,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    fontSize = 18.sp
+                )
+            }
+        }
+    }
+}
+```
+
+---
+
+## 🎯 تمرین: بازی حدس عدد
+
+### ✍️ صورت تمرین:
+
+یک عدد مخفی در برنامه تولید شود.
+کاربر عددی را حدس می‌زند و پس از هر حدس، برنامه می‌گوید عدد بزرگ‌تر است، کوچک‌تر است یا درست حدس زده شده.
+همه‌ی حدس‌ها در یک لیست داینامیک نمایش داده شوند.
+
+---
+
+## ✅ راه‌حل تمرین با `mutableStateListOf`
+
+```kotlin
+@Composable
+fun SimpleNumberGuessGame() {
+    val guesses = remember { mutableStateListOf<String>() }
+    var input by remember { mutableStateOf("") }
+    var message by remember { mutableStateOf("") }
+    val secretNumber = remember { Random.nextInt(1, 101) }
+
+    Column(modifier = Modifier.padding(16.dp)) {
+        TextField(
+            value = input,
+            onValueChange = { input = it },
+            label = { Text("یک عدد حدس بزن") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Button(onClick = {
+            val guess = input.toInt()
+            guesses.add("حدس: $guess")
+            message = when {
+                guess < secretNumber -> "عدد بزرگ‌تره"
+                guess > secretNumber -> "عدد کوچک‌تره"
+                else -> "درست گفتی!"
+            }
+            input = ""
+        }) {
+            Text("ثبت حدس")
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(text = message, fontSize = 18.sp)
+
+        LazyColumn {
+            items(guesses) { guessText ->
+                Text(
+                    text = guessText,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(4.dp)
+                )
+            }
+        }
+    }
+}
+```
+
+---
+
+## 🧠 نکات مهم
+
+* `mutableStateListOf`: لیستی که با تغییر محتوای آن، UI به‌صورت خودکار به‌روزرسانی می‌شود.
+* `remember`: برای نگهداری وضعیت در طول عمر کامپوز.
+* `LazyColumn + items(list)`: برای نمایش عناصر پویا و قابل رشد.
+
+---
+
+## ✅ جمع‌بندی
+
+`mutableStateListOf` ابزار اصلی برای ساخت لیست‌های داینامیک در Jetpack Compose است.
+با استفاده از آن، می‌توان اپلیکیشن‌های تعاملی مثل لیست، فرم، یا بازی‌های ساده طراحی کرد.
+
+---
+
