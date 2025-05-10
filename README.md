@@ -288,11 +288,11 @@ fun DynamicListExample() {
 
 ```kotlin
 @Composable
-fun SimpleNumberGuessGame() {
-    val guesses = remember { mutableStateListOf<String>() }
+fun NumberGuessGame() {
     var input by remember { mutableStateOf("") }
-    var message by remember { mutableStateOf("") }
+    val guesses = remember { mutableStateListOf<String>() }
     val secretNumber = remember { Random.nextInt(1, 101) }
+    var message by remember { mutableStateOf("") }
 
     Column(modifier = Modifier.padding(16.dp)) {
         TextField(
@@ -307,10 +307,12 @@ fun SimpleNumberGuessGame() {
         Button(onClick = {
             val guess = input.toInt()
             guesses.add("حدس: $guess")
-            message = when {
-                guess < secretNumber -> "عدد بزرگ‌تره"
-                guess > secretNumber -> "عدد کوچک‌تره"
-                else -> "درست گفتی!"
+            message = if (guess < secretNumber) {
+                "عدد بزرگ‌تره"
+            } else if (guess > secretNumber) {
+                "عدد کوچک‌تره"
+            } else {
+                "درست گفتی!"
             }
             input = ""
         }) {
@@ -332,6 +334,7 @@ fun SimpleNumberGuessGame() {
         }
     }
 }
+
 ```
 
 ---
